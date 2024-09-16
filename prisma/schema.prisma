@@ -1,0 +1,148 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("POSTGRES_URL") // uses connection pooling
+}
+
+enum Size {
+    XS // Extra Small
+    S // Small
+    M // Medium
+    L // Large
+    XL // Extra Large
+    XXL // Extra Extra Large
+}
+
+enum Role {
+    USER
+    ADMIN
+    EMPLOYEE
+}
+
+enum Gender {
+    MEN
+    WOMEN
+    KIDS
+    UNISEX
+}
+
+model Account {
+    userId            String
+    user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    type              String
+    provider          String
+    providerAccountId String
+    access_token      String?
+    token_type        String?
+    scope             String?
+    createdAt         DateTime @default(now())
+    updatedAt         DateTime @updatedAt
+
+    @@id([provider, providerAccountId])
+}
+
+model User {
+    id            String     @id @default(cuid())
+    name          String?
+    password      String?
+    email         String     @unique
+    emailVerified DateTime?
+    image         String?
+    role          Role       @default(USER)
+    accounts      Account[]
+    cartItems     CartItem[]
+    ratings       Rating[] // One-to-many relation
+    comments      Comment[] // One-to-many relation
+    createdAt     DateTime   @default(now())
+    updatedAt     DateTime   @updatedAt
+}
+
+model CartItem {
+    id        String         @id @default(cuid())
+    quantity  Int
+    userId    String
+    user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+    variantId String
+    variant   ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+    createdAt DateTime       @default(now())
+    updatedAt DateTime       @updatedAt
+}
+
+model Product {
+    id          String           @id @default(cuid())
+    name        String
+    description String?
+    published   Boolean          @default(false)
+    price       Float // Base price for the product
+    slug        String           @unique
+    categoryId  String
+    category    Category         @relation(fields: [categoryId], references: [id])
+    ratings     Rating[] // One-to-many relation
+    comments    Comment[] // One-to-many relation
+    variants    ProductVariant[] // One-to-many relation
+    createdAt   DateTime         @default(now())
+    updatedAt   DateTime         @updatedAt
+}
+
+model ProductVariant {
+    id        String         @id @default(cuid())
+    color     String
+    price     Float // Specific price for the variant
+    size      Size
+    stock     Int            @default(0)
+    productId String
+    product   Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
+    images    ProductImage[] // One-to-many relation
+    cartItems CartItem[] // One-to-many relation
+    createdAt DateTime       @default(now())
+    updatedAt DateTime       @updatedAt
+}
+
+model ProductImage {
+    id        String         @id @default(cuid())
+    url       String
+    variantId String
+    variant   ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+    createdAt DateTime       @default(now())
+    updatedAt DateTime       @updatedAt
+}
+
+model Rating {
+    id        String   @id @default(cuid())
+    stars     Int      @default(0)
+    userId    String
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    productId String
+    product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Category {
+    id        String    @id @default(cuid())
+    name      String
+    gender    Gender
+    slug      String    @unique
+    products  Product[] // One-to-many relation
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+}
+
+model Comment {
+    id          String   @id @default(cuid())
+    title       String
+    description String
+    date        DateTime @default(now())
+    rating      Int      @default(0)
+    userId      String
+    user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    productId   String
+    product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    @@unique([userId, productId]) // Composite unique constraint a user can only comment once per product
+}
