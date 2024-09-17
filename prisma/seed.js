@@ -35,19 +35,19 @@ async function seedProducts() {
                     name: "Product 1",
                     description: "This is product 1",
                     published: true,
-                    price: 100,
+                    basePrice: 100,
                     slug: "product-1-1",
-                    categoryId: "cm148xsva000008la0ax99gne"
+                    categoryId: "cm148xsva000008la0ax99gne",
                 },
                 {
                     id: "cm147z8ux000208jugn2jgpws",
                     name: "Product 2",
                     description: "This is product 2",
                     published: true,
-                    price: 100,
+                    basePrice: 100,
                     slug: "product-2-1",
-                    categoryId: "cm148xzco000108la4yre0lj3"
-                }
+                    categoryId: "cm148xzco000108la4yre0lj3",
+                },
             ],
         });
     } catch (error) {
@@ -72,7 +72,7 @@ async function seedCategories() {
                     name: "Bottoms",
                     gender: Gender.MEN,
                     slug: "bottoms-1",
-                }
+                },
             ],
         });
     } catch (error) {
@@ -88,20 +88,22 @@ async function seedProductVariant() {
             data: [
                 {
                     id: "cm14b7m8q000108mda43e0m8j",
-                    color: 'Green',
-                    price: 100,
-                    size: 'M',
+                    color: "Green",
+                    colorCode: "#36de3a",
+                    currentPrice: 50,
+                    size: "M",
                     stock: 50,
-                    productId: 'cm147w0q6000008juf4sje2jh',
-                  },
-                  {
+                    productId: "cm147w0q6000008juf4sje2jh",
+                },
+                {
                     id: "cm14b7xkh000208md1ok8ex7l",
-                    color: 'Red',
-                    price: 80,
-                    size: 'XXL',
+                    color: "Red",
+                    colorCode: "#f81d1d",
+                    currentPrice: 80,
+                    size: "XXL",
                     stock: 30,
-                    productId: 'cm147w0q6000008juf4sje2jh',
-                  },
+                    productId: "cm147w0q6000008juf4sje2jh",
+                },
             ],
         });
     } catch (error) {
@@ -116,13 +118,13 @@ async function seedProductImages() {
         await prisma.productImage.createMany({
             data: [
                 {
-                    url: 'https://placehold.co/600x400',
-                    variantId: 'cm14b7m8q000108mda43e0m8j',
-                  },
-                  {
-                    url: 'https://placehold.co/600x400',
-                    variantId: 'cm14b7m8q000108mda43e0m8j',
-                  },
+                    url: "/mens.jpeg",
+                    variantId: "cm14b7m8q000108mda43e0m8j",
+                },
+                {
+                    url: "/mens2.jpeg",
+                    variantId: "cm14b7xkh000208md1ok8ex7l",
+                },
             ],
         });
     } catch (error) {

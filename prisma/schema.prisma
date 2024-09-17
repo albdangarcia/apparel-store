@@ -29,6 +29,13 @@ enum Gender {
     UNISEX
 }
 
+enum SaleType {
+    CLEARANCE
+    LIMITED_TIME_OFFER
+    SEASONAL
+    SPECIAL
+}
+
 model Account {
     userId            String
     user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -76,7 +83,7 @@ model Product {
     name        String
     description String?
     published   Boolean          @default(false)
-    price       Float // Base price for the product
+    basePrice   Float // Base price for the product
     slug        String           @unique
     categoryId  String
     category    Category         @relation(fields: [categoryId], references: [id])
@@ -88,17 +95,20 @@ model Product {
 }
 
 model ProductVariant {
-    id        String         @id @default(cuid())
-    color     String
-    price     Float // Specific price for the variant
-    size      Size
-    stock     Int            @default(0)
-    productId String
-    product   Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
-    images    ProductImage[] // One-to-many relation
-    cartItems CartItem[] // One-to-many relation
-    createdAt DateTime       @default(now())
-    updatedAt DateTime       @updatedAt
+    id           String         @id @default(cuid())
+    color        String
+    colorCode    String // Hexadecimal, RGB, or any other color code
+    currentPrice Float // Specific price for the variant
+    size         Size
+    isOnSale     Boolean        @default(false)
+    saleType     SaleType? // e.g., "Clearance", "Limited Time Offer", etc.
+    stock        Int            @default(0)
+    productId    String
+    product      Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
+    images       ProductImage[] // One-to-many relation
+    cartItems    CartItem[] // One-to-many relation
+    createdAt    DateTime       @default(now())
+    updatedAt    DateTime       @updatedAt
 }
 
 model ProductImage {
