@@ -4,6 +4,7 @@ import { ProductCardsProps, Variant } from "../lib/types";
 import clsx from "clsx";
 
 const ProductCard = ({ product }: { product: ProductCardsProps }) => {
+    // State to manage the selected variant
     const [selectedVariant, setSelectedVariant] = useState<Variant | undefined>(
         product.variants.length > 0 ? product.variants[0] : undefined
     );

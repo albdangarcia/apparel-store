@@ -7,3 +7,11 @@ export interface Variant extends Pick<ProductVariant, "id" | "color" | "size" | 
 export interface ProductCardsProps extends Pick<Product, "id" | "name" | "basePrice" | "slug"> {
     variants: Variant[];
 }
+
+export interface ProductsResponse {
+    products: ProductCardsProps[];
+}
+
+export interface ErrorResponse {
+    error: string;
+}

@@ -1,12 +1,12 @@
-import ProductCard from "@/app/components/all-product-cards";
-import { fetchMens } from "@/app/lib/data/mens";
+import AllProductCards from "@/app/components/all-product-cards";
+import Link from "next/link";
 
 const Page = async () => {
-    const products = await fetchMens();
     return (
         <div>
             <h1>All products</h1>
-            <ProductCard products={products} />
+            <Link href="dashboard/mens/create" className="bg-blue-700 text-white">Create</Link>
+            <AllProductCards />
         </div>
     );
 };
