@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Product } from "@prisma/client";
+import { Gender, Product } from "@prisma/client";
 import { ErrorResponse } from "@/app/lib/types";
 
 const Page = () => {
@@ -12,7 +12,8 @@ const Page = () => {
         name: "",
         basePrice: "",
         description: "",
-        published: "true",
+        gender: "",
+        published: "",
     });
 
     // Initialize the error state
@@ -40,7 +41,7 @@ const Page = () => {
 
         try {
             // Send a POST request to create a new product
-            const response = await fetch("/api/products", {
+            const response = await fetch("/api/dashboard/products", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -82,6 +83,29 @@ const Page = () => {
         <div>
             {error && <div className="error-message">{error}</div>}
             <form className="grid gap-y-4" onSubmit={handleSubmit}>
+                {/* Gender */}
+                <div>
+                    <label htmlFor="gender">Gender</label>
+                    <select
+                        name="gender"
+                        id="gender"
+                        required
+                        autoComplete="off"
+                        aria-describedby="gender-error"
+                        value={formData.gender}
+                        onChange={handleChange}
+                    >
+                        <option className="capitalize" value="">
+                            Select Gender
+                        </option>
+                        {Object.values(Gender).map((gender) => (
+                            <option key={gender} value={gender}>
+                                {gender}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
                 {/* Category select */}
                 <div>
                     <label htmlFor="categoryId">Category</label>
@@ -168,7 +192,7 @@ const Page = () => {
 
                 {/* published select */}
                 <div>
-                    <label htmlFor="published">published</label>
+                    <label htmlFor="published">Published</label>
                     <select
                         name="published"
                         id="published"
@@ -178,6 +202,9 @@ const Page = () => {
                         value={formData.published}
                         onChange={handleChange}
                     >
+                        <option className="capitalize" value="">
+                            Select Published
+                        </option>
                         <option className="capitalize" value="true">
                             True
                         </option>

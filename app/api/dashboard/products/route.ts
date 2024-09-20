@@ -4,23 +4,63 @@ import {
     ProductCardsProps,
     ProductsResponse,
 } from "@/app/lib/types";
-import { CreateProductSchema } from "@/app/lib/zodSchemas";
-import { Gender, PrismaClient, Product } from "@prisma/client";
+import { CreateProductSchema, SearchSchema } from "@/app/lib/zodSchemas";
+import { Gender, Prisma, PrismaClient, Product } from "@prisma/client";
 import { NextResponse, NextRequest } from "next/server";
 const prisma = new PrismaClient();
 import { z } from "zod";
 
-export async function GET(
+const GenderSchema = z.nativeEnum(Gender);
+
+const GET = async (
     request: NextRequest
-): Promise<NextResponse<ProductsResponse | ErrorResponse>> {
+): Promise<NextResponse<ProductsResponse | ErrorResponse>> => {
     try {
+        const { searchParams } = new URL(request.url);
+        const genderParam = searchParams.get("gender");
+        const searchParam = searchParams?.get("search") || "";
+
+        const whereClause: Prisma.ProductWhereInput = {
+            published: true,
+        };
+
+        // Check if genderParam is present and not empty
+        if (genderParam) {
+            const parsedGender = GenderSchema.safeParse(genderParam);
+
+            // Handle validation failure
+            if (!parsedGender.success) {
+                return NextResponse.json(
+                    { error: "Invalid gender parameter" },
+                    { status: 400 }
+                );
+            }
+
+            // Add gender filter to whereClause
+            whereClause.gender = parsedGender.data;
+        }
+
+        // Check if searchParam is present and not empty
+        if (searchParam) {
+            const validatedSearch = SearchSchema.safeParse(searchParam);
+
+            // Handle validation failure
+            if (!validatedSearch.success) {
+                return NextResponse.json(
+                    { error: "Invalid search parameter" },
+                    { status: 400 }
+                );
+            }
+
+            // Add search filter to whereClause
+            whereClause.name = {
+                contains: validatedSearch.data,
+                mode: "insensitive",
+            };
+        }
+
         const products: ProductCardsProps[] = await prisma.product.findMany({
-            where: {
-                published: true,
-                category: {
-                    gender: Gender.MEN,
-                },
-            },
+            where: whereClause,
             select: {
                 id: true,
                 name: true,
@@ -53,9 +93,9 @@ export async function GET(
     }
 }
 
-export async function POST(
+const POST = async (
     request: NextRequest
-): Promise<NextResponse<Product | ErrorResponse>> {
+): Promise<NextResponse<Product | ErrorResponse>> => {
     try {
         // Parse the request body
         const body = await request.json();
@@ -74,6 +114,7 @@ export async function POST(
                 basePrice: validatedData.basePrice,
                 description: validatedData.description,
                 published: validatedData.published,
+                gender: validatedData.gender,
                 slug: slug,
             },
         });
@@ -97,3 +138,5 @@ export async function POST(
         );
     }
 }
+
+export { GET, POST };

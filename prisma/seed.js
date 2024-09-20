@@ -37,6 +37,7 @@ async function seedProducts() {
                     published: true,
                     basePrice: 100,
                     slug: "product-1-1",
+                    gender: Gender.MENS,
                     categoryId: "cm148xsva000008la0ax99gne",
                 },
                 {
@@ -46,6 +47,7 @@ async function seedProducts() {
                     published: true,
                     basePrice: 100,
                     slug: "product-2-1",
+                    gender: Gender.MENS,
                     categoryId: "cm148xzco000108la4yre0lj3",
                 },
             ],
@@ -64,13 +66,11 @@ async function seedCategories() {
                 {
                     id: "cm148xsva000008la0ax99gne",
                     name: "Tops",
-                    gender: Gender.MEN,
                     slug: "tops-1",
                 },
                 {
                     id: "cm148xzco000108la4yre0lj3",
                     name: "Bottoms",
-                    gender: Gender.MEN,
                     slug: "bottoms-1",
                 },
             ],

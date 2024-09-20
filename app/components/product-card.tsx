@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { ProductCardsProps, Variant } from "../lib/types";
 import clsx from "clsx";
+import Link from "next/link";
 
 const ProductCard = ({ product }: { product: ProductCardsProps }) => {
     // State to manage the selected variant
@@ -25,11 +26,14 @@ const ProductCard = ({ product }: { product: ProductCardsProps }) => {
                 </div>
             ) : (
                 <div className="bg-gray-100 relative overflow-hidden h-80 items-center justify-center flex">
-                    <span className="text-gray-500 font-medium text-sm">no image</span>
+                    <span className="text-gray-500 font-medium text-sm">
+                        no image
+                    </span>
                 </div>
             )}
 
-            <h2 className="">{product.name}</h2>
+            {/* product name */}
+            <h2 className=""><Link href={`/dashboard/${product.slug}`}>{product.name}</Link></h2>
 
             {/* product variants */}
             <div className="grid grid-cols-5 gap-x-0 w-44">

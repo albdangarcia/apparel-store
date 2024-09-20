@@ -23,8 +23,8 @@ enum Role {
 }
 
 enum Gender {
-    MEN
-    WOMEN
+    MENS
+    WOMENS
     KIDS
     UNISEX
 }
@@ -85,6 +85,7 @@ model Product {
     published   Boolean          @default(false)
     basePrice   Float // Base price for the product
     slug        String           @unique
+    gender      Gender
     categoryId  String
     category    Category         @relation(fields: [categoryId], references: [id])
     ratings     Rating[] // One-to-many relation
@@ -134,7 +135,6 @@ model Rating {
 model Category {
     id        String    @id @default(cuid())
     name      String
-    gender    Gender
     slug      String    @unique
     products  Product[] // One-to-many relation
     createdAt DateTime  @default(now())

@@ -16,7 +16,7 @@ const AllProductCards = () => {
         const fetchProducts = async () => {
             try {
                 // Make the API request
-                const response = await fetch("/api/products");
+                const response = await fetch("/api/dashboard/products");
                 
                 // Check if the response is not OK
                 if (!response.ok) {
