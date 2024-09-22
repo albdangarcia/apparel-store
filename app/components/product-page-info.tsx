@@ -2,9 +2,7 @@
 import { ProductCardsProps } from "@/app/lib/types";
 import { useEffect, useState } from "react";
 
-const Page = async ({ params }: { params: { slug: string } }) => {
-    // get id from params
-    const slug = params.slug;
+const Page = ({ productName }: { productName: string }) => {
 
     // State to hold the product
     const [product, setProduct] = useState<ProductCardsProps>();
@@ -18,7 +16,7 @@ const Page = async ({ params }: { params: { slug: string } }) => {
         const fetchProduct = async () => {
             try {
                 // Make the API request
-                const response = await fetch(`/api/dashboard/products/${slug}`);
+                const response = await fetch(`/api/dashboard/products/${productName}`);
 
                 // Check if the response is not OK
                 if (!response.ok) {
@@ -28,8 +26,10 @@ const Page = async ({ params }: { params: { slug: string } }) => {
                 // Parse the JSON response
                 const data = await response.json();
 
-                // Set the product state with the fetched data
-                setProduct(data.product);
+                console.log(data);
+
+                // Set the product state
+                setProduct(data);
             } catch (error) {
                 // Log the error and set the error state
                 console.error("Error fetching product:", error);
@@ -43,7 +43,7 @@ const Page = async ({ params }: { params: { slug: string } }) => {
         };
         // Call the fetchProduct function
         fetchProduct();
-    }, []);
+    }, [productName]);
 
     // Render loading state
     if (loading) {
@@ -57,9 +57,28 @@ const Page = async ({ params }: { params: { slug: string } }) => {
     return (
         <div>
             <h1>Product information</h1>
-            <p>{product?.name}</p>
+            {product && (
+                <div>
+                    <h2>{product.name}</h2>
+                    <p>{product.basePrice}</p>
+                    <p>Variants</p>
+                    <div>
+                        {product.variants.map((variant) => (
+                            <div key={variant.id}>
+                                <p>{variant.color}</p>
+                                <p>{variant.currentPrice}</p>
+                                <img
+                                    width={100}
+                                    src={variant.images[0].url}
+                                    alt={product.name}
+                                />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
         </div>
     );
-}
+};
 
 export default Page;

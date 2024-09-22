@@ -39,10 +39,8 @@ const POST = async (
                 color: validatedData.color,
                 colorCode: validatedData.colorCode,
                 currentPrice: validatedData.currentPrice,
-                size: validatedData.size,
                 isOnSale: validatedData.isOnSale,
                 saleType: validatedData.saleType,
-                stock: validatedData.stock,
                 productId: product.id,
             },
         });

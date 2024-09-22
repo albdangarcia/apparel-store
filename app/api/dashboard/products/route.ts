@@ -70,7 +70,6 @@ const GET = async (
                     select: {
                         id: true,
                         color: true,
-                        size: true,
                         currentPrice: true,
                         images: {
                             select: {

@@ -4,7 +4,12 @@ import { ProductCardsProps, Variant } from "../lib/types";
 import clsx from "clsx";
 import Link from "next/link";
 
-const ProductCard = ({ product }: { product: ProductCardsProps }) => {
+interface Props {
+    product: ProductCardsProps;
+    gender: string;
+}
+
+const ProductCard = ({ product, gender }: Props) => {
     // State to manage the selected variant
     const [selectedVariant, setSelectedVariant] = useState<Variant | undefined>(
         product.variants.length > 0 ? product.variants[0] : undefined
@@ -33,7 +38,7 @@ const ProductCard = ({ product }: { product: ProductCardsProps }) => {
             )}
 
             {/* product name */}
-            <h2 className=""><Link href={`/dashboard/${product.slug}`}>{product.name}</Link></h2>
+            <h2 className=""><Link href={`/dashboard/${gender}/${product.slug}`}>{product.name}</Link></h2>
 
             {/* product variants */}
             <div className="grid grid-cols-5 gap-x-0 w-44">

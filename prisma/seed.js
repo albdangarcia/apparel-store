@@ -91,8 +91,6 @@ async function seedProductVariant() {
                     color: "Green",
                     colorCode: "#36de3a",
                     currentPrice: 50,
-                    size: "M",
-                    stock: 50,
                     productId: "cm147w0q6000008juf4sje2jh",
                 },
                 {
@@ -100,8 +98,6 @@ async function seedProductVariant() {
                     color: "Red",
                     colorCode: "#f81d1d",
                     currentPrice: 80,
-                    size: "XXL",
-                    stock: 30,
                     productId: "cm147w0q6000008juf4sje2jh",
                 },
             ],
@@ -111,6 +107,30 @@ async function seedProductVariant() {
         throw error;
     }
 }
+
+async function seedProductSizes() {
+    console.log("Seeding product sizes...");
+    try { 
+        await prisma.productSize.createMany({
+            data: [
+                {
+                    size: "M",
+                    stock: 50,
+                    variantId: "cm14b7m8q000108mda43e0m8j",
+                },
+                {
+                    size: "XXL",
+                    stock: 30,
+                    variantId: "cm14b7xkh000208md1ok8ex7l",
+                },
+            ],
+        });
+    } catch (error) {
+        console.error("Error seeding product sizes:", error);
+        throw error;
+    }
+}
+
 
 async function seedProductImages() {
     console.log("Seeding product images...");
@@ -137,6 +157,7 @@ async function main() {
     // Clear existing data
     console.log("Deleting existing data ...");
     // await prisma.user.deleteMany();
+    await prisma.productSize.deleteMany();
     await prisma.productImage.deleteMany();
     await prisma.productVariant.deleteMany();
     await prisma.product.deleteMany();
@@ -149,6 +170,7 @@ async function main() {
     await seedProducts();
     await seedProductVariant();
     await seedProductImages();
+    await seedProductSizes();
 
     console.log("Seeding finished.");
 }

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { ProductCardsProps, ProductsResponse } from "../lib/types";
 import ProductCard from "./product-card";
 
-const AllProductCards = () => {
+const AllProductCards = ({ gender }: { gender: string }) => {
     // State to hold the list of products
     const [products, setProducts] = useState<ProductCardsProps[]>([]);
     // State to manage the loading state
@@ -16,8 +16,10 @@ const AllProductCards = () => {
         const fetchProducts = async () => {
             try {
                 // Make the API request
-                const response = await fetch("/api/dashboard/products");
-                
+                const response = await fetch(
+                    `/api/dashboard/products/gender/${gender}`
+                );
+
                 // Check if the response is not OK
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -41,7 +43,7 @@ const AllProductCards = () => {
         };
         // Call the fetchProducts function
         fetchProducts();
-    }, []);
+    }, [gender]);
 
     // Render loading state
     if (loading) {
@@ -61,7 +63,7 @@ const AllProductCards = () => {
                     key={product.id}
                     className="flex items-center justify-center"
                 >
-                    <ProductCard product={product} />
+                    <ProductCard product={product} gender={gender} />
                 </div>
             ))}
         </div>

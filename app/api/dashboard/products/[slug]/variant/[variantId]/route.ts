@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 import { z } from "zod";
 
 interface ParamsProps {
-    params: { id: string };
+    params: { slug: string; variantId: string };
 }
 
 // Methods to update and delete a product variant by ID
@@ -24,7 +24,7 @@ const PUT = async (
 
         // Fetch the existing variant with its related product
         const existingVariant = await prisma.productVariant.findUnique({
-            where: { id: params.id },
+            where: { id: params.variantId },
         });
 
         if (!existingVariant) {
@@ -36,16 +36,14 @@ const PUT = async (
 
         // Update the variant in the database
         const variant = await prisma.productVariant.update({
-            where: { id: params.id },
+            where: { id: params.variantId },
             data: {
                 color: validatedData.color ?? existingVariant.color,
                 colorCode: validatedData.colorCode ?? existingVariant.colorCode,
                 currentPrice:
                     validatedData.currentPrice ?? existingVariant.currentPrice,
-                size: validatedData.size ?? existingVariant.size,
                 isOnSale: validatedData.isOnSale ?? existingVariant.isOnSale,
                 saleType: validatedData.saleType ?? existingVariant.saleType,
-                stock: validatedData.stock ?? existingVariant.stock,
             },
         });
 
@@ -75,7 +73,7 @@ const DELETE = async (
     try {
         // Fetch the existing variant
         const existingVariant = await prisma.productVariant.findUnique({
-            where: { id: params.id },
+            where: { id: params.variantId },
             include: { product: true },
         });
 
@@ -88,7 +86,7 @@ const DELETE = async (
 
         // Delete the variant from the database
         await prisma.productVariant.delete({
-            where: { id: params.id },
+            where: { id: params.variantId },
         });
 
         return NextResponse.json(existingVariant, { status: 200 });

@@ -1,17 +1,21 @@
 import AllProductCards from "@/app/components/all-product-cards";
 import Link from "next/link";
 
-const Page = () => {
+interface ParamsProps {
+    params: { gender: string };
+}
+
+const Page = ({ params }: ParamsProps) => {
     return (
         <div>
-            <h1>All products</h1>
+            <h1 className="capitalize">{params.gender}</h1>
             <Link
                 href="dashboard/mens/create"
                 className="bg-blue-700 text-white"
             >
                 Create product
             </Link>
-            <AllProductCards />
+            <AllProductCards gender={params.gender}/>
         </div>
     );
 };

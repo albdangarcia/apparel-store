@@ -1,4 +1,4 @@
-import { Gender, SaleType, Size } from "@prisma/client";
+import { Gender, SaleType } from "@prisma/client";
 import { z } from "zod";
 
 // Define the schema for input validation
@@ -27,9 +27,7 @@ export const CreateVariantSchema = z.object({
         .max(50)
         .regex(/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/, "Invalid hex color code"),
     currentPrice: z.coerce.number().gt(0, { message: "Price must be greater than $0" }),
-    size: z.nativeEnum(Size),
     isOnSale: z.boolean(),
     saleType: z.nativeEnum(SaleType),
-    stock: z.coerce.number().int().min(0, { message: "Stock must be greater than or equal to 0" }),
     productId: z.string(),
 });
