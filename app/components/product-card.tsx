@@ -38,7 +38,12 @@ const ProductCard = ({ product, gender }: Props) => {
             )}
 
             {/* product name */}
-            <h2 className=""><Link href={`/dashboard/${gender}/${product.slug}`}>{product.name}</Link></h2>
+            <h2 className="">
+                {/* <Link href={`/dashboard/${gender}/${product.slug}`}> */}
+                <Link href={`/gender/${gender}/${product.slug}`}>
+                    {product.name}
+                </Link>
+            </h2>
 
             {/* product variants */}
             <div className="grid grid-cols-5 gap-x-0 w-44">
