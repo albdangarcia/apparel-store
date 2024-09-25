@@ -14,7 +14,7 @@ const Page = async ({ params }: ParamsProps) => {
         <div>
             <h1 className="capitalize">{gender}</h1>
             <Link
-                href="dashboard/mens/create"
+                href="/dashboard/mens/create"
                 className="bg-blue-700 text-white"
             >
                 Create product

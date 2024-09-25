@@ -1,6 +1,6 @@
 import { generateSlug } from "@/app/lib/generateSlug";
 import { ErrorResponse, ProductCardsProps } from "@/app/lib/types";
-import { CreateProductSchema } from "@/app/lib/zodSchemas";
+import { CreateProductFormSchema } from "@/app/lib/zodSchemas";
 import { PrismaClient, Product } from "@prisma/client";
 import { NextResponse, NextRequest } from "next/server";
 const prisma = new PrismaClient();
@@ -21,7 +21,7 @@ const PUT = async (
         const body = await request.json();
 
         // Validate the input
-        const validatedData = CreateProductSchema.parse(body);
+        const validatedData = CreateProductFormSchema.parse(body);
 
         // Fetch the existing product
         const existingProduct = await prisma.product.findUnique({

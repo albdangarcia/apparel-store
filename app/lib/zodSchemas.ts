@@ -2,7 +2,7 @@ import { Gender, SaleType } from "@prisma/client";
 import { z } from "zod";
 
 // Define the schema for input validation
-export const CreateProductSchema = z.object({
+export const CreateProductFormSchema = z.object({
     categoryId: z.string(),
     name: z.string().min(1, "Name is required"),
     basePrice: z.coerce
@@ -12,6 +12,19 @@ export const CreateProductSchema = z.object({
     gender: z.nativeEnum(Gender),
     published: z.enum(["true", "false"]).transform((val) => val === "true"),
 });
+
+// Error interface
+export interface ProductFormError {
+    errors?: {
+        categoryId?: string[];
+        name?: string[];
+        basePrice?: string[];
+        description?: string[];
+        gender?: string[];
+        published?: string[];
+    };
+    message?: string | null;
+}
 
 // Define the schema for the search parameter
 export const SearchSchema = z

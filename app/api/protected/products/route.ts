@@ -4,8 +4,8 @@ import {
     ProductCardsProps,
     ProductsResponse,
 } from "@/app/lib/types";
-import { CreateProductSchema, SearchSchema } from "@/app/lib/zodSchemas";
-import { Gender, Prisma, PrismaClient, Product } from "@prisma/client";
+import { CreateProductFormSchema, SearchSchema } from "@/app/lib/zodSchemas";
+import { Gender, Prisma, PrismaClient } from "@prisma/client";
 import { NextResponse, NextRequest } from "next/server";
 const prisma = new PrismaClient();
 import { z } from "zod";
@@ -90,45 +90,71 @@ const GET = async (
             { status: 500 }
         );
     }
-}
+};
 
-const POST = async (
-    request: NextRequest
-): Promise<NextResponse<Product | ErrorResponse>> => {
+/**
+ * Handles the creation of a new product.
+ * 
+ * This function processes a POST request to create a new product in the database.
+ * It expects the request body to be in the form of `FormData` and validates the fields
+ * using Zod schema. If validation passes, it creates a new product in the database
+ * and returns the created product with a 201 status code. If validation fails or any
+ * other error occurs, it returns an appropriate error response.
+ * 
+ * @param {NextRequest} request - The incoming request object.
+ * @returns {Promise<NextResponse>} - The response object containing the created product or an error message.
+ * 
+ * @throws {Error} - Throws an error if there is an issue with creating the product in the database.
+ */
+const POST = async (request: NextRequest): Promise<NextResponse> => {
     try {
-        // Parse the request body
-        const body = await request.json();
+        // // Parse the request body as FormData
+        const formData = await request.formData();
 
-        // Validate the input
-        const validatedData = CreateProductSchema.parse(body);
+        // Validate form fields using Zod
+        const validatedFields = CreateProductFormSchema.safeParse({
+            categoryId: formData.get("categoryId"),
+            name: formData.get("name"),
+            basePrice: formData.get("basePrice"),
+            description: formData.get("description"),
+            gender: formData.get("gender"),
+            published: formData.get("published"),
+        });
+
+        // If form validation fails, return errors early. Otherwise, continue.
+        if (!validatedFields.success) {
+            return NextResponse.json(
+                {
+                    errors: validatedFields.error.flatten().fieldErrors,
+                    message: "Missing Fields. Failed to Create Product.",
+                },
+                { status: 400 }
+            );
+        }
+
+        // Extract the validated data
+        const { categoryId, name, basePrice, description, gender, published } =
+            validatedFields.data;
 
         // Generate a unique slug
-        const slug = generateSlug(validatedData.name);
+        const slug = generateSlug(name);
 
         // Create the product in the database
         const product = await prisma.product.create({
             data: {
-                categoryId: validatedData.categoryId,
-                name: validatedData.name,
-                basePrice: validatedData.basePrice,
-                description: validatedData.description,
-                published: validatedData.published,
-                gender: validatedData.gender,
+                categoryId: categoryId,
+                name: name,
+                basePrice: basePrice,
+                description: description,
+                published: published,
+                gender: gender,
                 slug: slug,
             },
         });
 
         // Return the created product with a 201 status code
-        return NextResponse.json(product, { status: 201 });
+        return NextResponse.json({ product, gender }, { status: 201 });
     } catch (error) {
-        if (error instanceof z.ZodError) {
-            // Format Zod validation errors
-            const errorMessages = error.errors
-                .map((err) => `${err.path.join(".")}: ${err.message}`)
-                .join(", ");
-            return NextResponse.json({ error: errorMessages }, { status: 400 });
-        }
-
         // Handle other errors
         console.error("Error creating product:", error);
         return NextResponse.json(
@@ -136,6 +162,6 @@ const POST = async (
             { status: 500 }
         );
     }
-}
+};
 
 export { GET, POST };

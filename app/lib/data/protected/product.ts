@@ -6,7 +6,7 @@ export const getProduct = async (productName: string) => {
         const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
         // Make the API request
-        const response = await fetch(`${apiUrl}/api/dashboard/products/${productName}`);
+        const response = await fetch(`${apiUrl}/api/protected/products/${productName}`);
 
         // Check if the response is not OK
         if (!response.ok) {
@@ -30,7 +30,7 @@ export const getProducts = async (gender: string) => {
 
     // Fetch products from the API based on gender
     const response = await fetch(
-        `${apiUrl}/api/dashboard/products/gender/${gender}`,
+        `${apiUrl}/api/protected/products/gender/${gender}`,
         { cache: "no-store" }
     );
 
