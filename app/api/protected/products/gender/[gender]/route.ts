@@ -1,10 +1,8 @@
-import { Gender } from "@prisma/client";
-import { z } from "zod";
 import { PrismaClient } from "@prisma/client";
 import { NextResponse, NextRequest } from "next/server";
+import { GenderSchema } from "@/app/lib/zodSchemas";
 const prisma = new PrismaClient();
 
-const GenderSchema = z.nativeEnum(Gender);
 interface ParamsProps {
     params: { gender: string };
 }
@@ -18,7 +16,10 @@ export async function GET(request: NextRequest, { params }: ParamsProps) {
 
         if (!parsedGender.success) {
             return NextResponse.json(
-                { error: "Invalid gender parameter" },
+                {
+                    errors: parsedGender.error.flatten().fieldErrors,
+                    message: "Missing Fields. Failed to Get Product.",
+                },
                 { status: 400 }
             );
         }

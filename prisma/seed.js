@@ -142,6 +142,14 @@ async function seedProductImages() {
                     variantId: "cm14b7m8q000108mda43e0m8j",
                 },
                 {
+                    url: "/womens.jpeg",
+                    variantId: "cm14b7m8q000108mda43e0m8j",
+                },
+                {
+                    url: "/womens2.webp",
+                    variantId: "cm14b7m8q000108mda43e0m8j",
+                },
+                {
                     url: "/mens2.jpeg",
                     variantId: "cm14b7xkh000208md1ok8ex7l",
                 },

@@ -1,22 +1,21 @@
 import { generateSlug } from "@/app/lib/generateSlug";
+import { ProductCardsProps } from "@/app/lib/types";
 import {
-    ErrorResponse,
-    ProductCardsProps,
-    ProductsResponse,
-} from "@/app/lib/types";
-import { CreateProductFormSchema, GenderSchema, SearchSchema } from "@/app/lib/zodSchemas";
+    CreateProductFormSchema,
+    GenderSchema,
+    SearchSchema,
+} from "@/app/lib/zodSchemas";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { NextResponse, NextRequest } from "next/server";
 const prisma = new PrismaClient();
 
-const GET = async (
-    request: NextRequest
-): Promise<NextResponse<ProductsResponse | ErrorResponse>> => {
+const GET = async (request: NextRequest) => {
     try {
         const { searchParams } = new URL(request.url);
-        const genderParam = searchParams.get("gender");
+        const genderParam = searchParams.get("gender")?.toUpperCase();
         const searchParam = searchParams?.get("search") || "";
 
+        // Create a where clause to filter products
         const whereClause: Prisma.ProductWhereInput = {
             published: true,
         };
@@ -79,7 +78,7 @@ const GET = async (
             },
         });
 
-        return NextResponse.json({ products });
+        return NextResponse.json(products, { status: 200 });
     } catch (error) {
         console.error("Error fetching products:", error);
         return NextResponse.json(
@@ -89,20 +88,6 @@ const GET = async (
     }
 };
 
-/**
- * Handles the creation of a new product.
- * 
- * This function processes a POST request to create a new product in the database.
- * It expects the request body to be in the form of `FormData` and validates the fields
- * using Zod schema. If validation passes, it creates a new product in the database
- * and returns the created product with a 201 status code. If validation fails or any
- * other error occurs, it returns an appropriate error response.
- * 
- * @param {NextRequest} request - The incoming request object.
- * @returns {Promise<NextResponse>} - The response object containing the created product or an error message.
- * 
- * @throws {Error} - Throws an error if there is an issue with creating the product in the database.
- */
 const POST = async (request: NextRequest): Promise<NextResponse> => {
     try {
         // // Parse the request body as FormData

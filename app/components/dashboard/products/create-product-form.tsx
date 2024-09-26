@@ -48,7 +48,7 @@ const CreateProductForm = () => {
                     >
                         {state.errors?.gender &&
                             state.errors.gender.map((error: string) => (
-                                <InputErrorMessage error={error} />
+                                <InputErrorMessage key={error} error={error} />
                             ))}
                     </div>
                 </div>
@@ -99,7 +99,7 @@ const CreateProductForm = () => {
                     <div id="name-error" aria-live="polite" aria-atomic="true">
                         {state.errors?.name &&
                             state.errors.name.map((error: string) => (
-                                <InputErrorMessage error={error} />
+                                <InputErrorMessage key={error} error={error} />
                             ))}
                     </div>
                 </div>
@@ -165,7 +165,7 @@ const CreateProductForm = () => {
                 {/* General errors */}
                 <div id="product-error" aria-live="polite" aria-atomic="true">
                     {state.message && (
-                        <InputErrorMessage error={state.message} />
+                        <InputErrorMessage key={state.message} error={state.message} />
                     )}
                 </div>
 

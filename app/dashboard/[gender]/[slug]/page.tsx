@@ -1,13 +1,15 @@
-import ProductPageInfo from "@/app/components/product-page-info";
+// import ProductPageInfo from "@/app/components/product-page-info";
+// import { getProduct } from "@/app/lib/data/protected/product";
 
 interface Props {
     params: { slug: string };
 }
 
-const Page = ({ params }: Props) => {
+const Page = async ({ params }: Props) => {
     const productName = params.slug;
     return (
-        <ProductPageInfo productName={productName} />
+        // <ProductPageInfo product={product} productName={productName} />
+        <div>{productName}</div>
     );
 }
 

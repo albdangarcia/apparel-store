@@ -1,5 +1,5 @@
-import AllProductCards from "@/app/components/all-product-cards";
-import { getProducts } from "@/app/lib/data/protected/product";
+// import AllProductCards from "@/app/components/all-product-cards";
+// import { getProducts } from "@/app/lib/data/protected/product";
 import Link from "next/link";
 
 interface ParamsProps {
@@ -8,7 +8,7 @@ interface ParamsProps {
 
 const Page = async ({ params }: ParamsProps) => {
     const gender = params.gender;
-    const products = await getProducts(gender);
+    // const products = await getProducts(gender);
 
     return (
         <div>
@@ -19,7 +19,7 @@ const Page = async ({ params }: ParamsProps) => {
             >
                 Create product
             </Link>
-            <AllProductCards products={products} gender={gender}/>
+            {/* <AllProductCards products={products} gender={gender}/> */}
         </div>
     );
 };

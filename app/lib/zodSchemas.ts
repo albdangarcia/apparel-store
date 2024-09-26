@@ -44,3 +44,5 @@ export const CreateVariantSchema = z.object({
     saleType: z.nativeEnum(SaleType),
     productId: z.string(),
 });
+
+export const GenderSchema = z.nativeEnum(Gender);
