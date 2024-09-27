@@ -110,17 +110,26 @@ const GET = async (
                 name: true,
                 basePrice: true,
                 slug: true,
+                description: true,
                 variants: {
                     select: {
                         id: true,
                         color: true,
                         currentPrice: true,
+                        colorCode: true,
                         images: {
                             select: {
                                 id: true,
                                 url: true,
                             },
                         },
+                        sizes: {
+                            select: {
+                                id: true,
+                                size: true,
+                                stock: true,
+                            }
+                        }
                     },
                 },
             },

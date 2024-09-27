@@ -26,6 +26,9 @@ const Page = async ({ params }: Props) => {
     }
 
     const product: ProductCardsProps = await getProduct(productName);
+    if (!product) {
+        return notFound();
+    }
 
     return <ProductPageInfo product={product} />;
 };

@@ -1,8 +1,8 @@
-// import { unstable_noStore as noStore } from "next/cache";
+import { unstable_noStore as noStore } from "next/cache";
 
 export const getProduct = async (productName: string) => {
     // Disable caching for this function
-    // noStore();
+    noStore();
     try {
         // Get the API URL from environment variables
         const apiUrl = process.env.NEXT_PUBLIC_API_URL;

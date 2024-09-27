@@ -1,10 +1,11 @@
-import { Product, ProductImage, ProductVariant } from "@prisma/client";
+import { Product, ProductImage, ProductSize, ProductVariant } from "@prisma/client";
 
-export interface Variant extends Pick<ProductVariant, "id" | "color" | "currentPrice"> {
+export interface Variant extends Pick<ProductVariant, "id" | "color" | "currentPrice" | "colorCode"> {
     images: Pick<ProductImage, "id" | "url">[];
+    sizes: Pick<ProductSize, "id" | "stock" | "size">[];
 }
 
-export interface ProductCardsProps extends Pick<Product, "id" | "name" | "basePrice" | "slug"> {
+export interface ProductCardsProps extends Pick<Product, "id" | "name" | "basePrice" | "slug" | "description"> {
     variants: Variant[];
 }
 
