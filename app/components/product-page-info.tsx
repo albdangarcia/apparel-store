@@ -53,6 +53,11 @@ interface ProductVariantProps {
     selectedVariant: Variant;
     setSelectedVariant: React.Dispatch<React.SetStateAction<Variant>>;
 }
+interface CartItem {
+    variantId: string;
+    size: Size;
+    quantity: number;
+}
 
 const allSizes = Object.values(Size);
 
@@ -62,11 +67,47 @@ const ProductVariant = ({
     setSelectedVariant,
 }: ProductVariantProps) => {
     const [selectedSize, setSelectedSize] = useState<Size | null>(null);
+    const [quantity, setQuantity] = useState(1);
 
     const handleVariantChange = (variant: Variant) => {
         setSelectedVariant(variant);
         setSelectedSize(null);
     };
+
+    const handleAddToCart = () => {
+        if (selectedSize) {
+            const cartItem: CartItem = {
+                variantId: selectedVariant.id,
+                size: selectedSize,
+                quantity: quantity,
+            };
+
+            // Retrieve the existing cart from localStorage
+            const cart: CartItem[] = JSON.parse(localStorage.getItem("cart") || "[]");
+
+            // Check if the item already exists in the cart
+            const existingItemIndex = cart.findIndex(
+                (item: CartItem) =>
+                    item.variantId === cartItem.variantId &&
+                    item.size === cartItem.size
+            );
+
+            if (existingItemIndex !== -1) {
+                // Update the quantity of the existing item
+                cart[existingItemIndex].quantity += cartItem.quantity;
+            } else {
+                // Add the new item to the cart
+                cart.push(cartItem);
+            }
+
+            // Store the updated cart back in localStorage
+            localStorage.setItem("cart", JSON.stringify(cart));
+            alert("Item added to cart");
+        } else {
+            alert("Please select a size");
+        }
+    };
+
     return (
         <div>
             <h1 className="text-2xl font-medium">{product.name}</h1>
@@ -161,6 +202,8 @@ const ProductVariant = ({
                             id="quantity"
                             className="appearance-none bg-white rounded-md pl-5 pr-8 w-24 text-base pt-2 pb-0 mt-0 h-full"
                             name="quantity"
+                            value={quantity}
+                            onChange={(e) => setQuantity(Number(e.target.value))}
                         >
                             {Array.from({ length: 5 }, (_, i) => (
                                 <option key={i + 1} value={i + 1}>
@@ -175,7 +218,10 @@ const ProductVariant = ({
                             QTY
                         </label>
                     </div>
-                    <button className="bg-gray-950 hover:bg-gray-800 text-white font-medium rounded-md h-full px-12">
+                    <button
+                        className="bg-gray-950 hover:bg-gray-800 text-white font-medium rounded-md h-full px-12"
+                        onClick={handleAddToCart}
+                    >
                         Add to cart
                     </button>
                 </div>
