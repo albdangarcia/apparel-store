@@ -1,17 +1,9 @@
 "use client";
-
-import { useEffect, useState } from "react";
+import { useCart } from "./cartContext";
 
 const CartButton = () => {
-    const [cartItemCount, setCartItemCount] = useState(0);
+    const { cartItemCount } = useCart();
 
-    useEffect(() => {
-        const cartData = localStorage.getItem('cart');
-        if (cartData) {
-            const cartItems = JSON.parse(cartData);
-            setCartItemCount(cartItems.length);
-        }
-    }, []);
     return (
         <div>
             Cart <span>({cartItemCount})</span>

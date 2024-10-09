@@ -3,6 +3,7 @@ import { ProductCardsProps, Variant } from "@/app/lib/types";
 import { Size } from "@prisma/client";
 import clsx from "clsx";
 import { useState } from "react";
+import { useCart } from "./cartContext";
 
 interface Props {
     product: ProductCardsProps;
@@ -68,6 +69,7 @@ const ProductVariant = ({
 }: ProductVariantProps) => {
     const [selectedSize, setSelectedSize] = useState<Size | null>(null);
     const [quantity, setQuantity] = useState(1);
+    const { addToCart } = useCart();
 
     const handleVariantChange = (variant: Variant) => {
         setSelectedVariant(variant);
@@ -76,32 +78,12 @@ const ProductVariant = ({
 
     const handleAddToCart = () => {
         if (selectedSize) {
-            const cartItem: CartItem = {
+            const cartItem = {
                 variantId: selectedVariant.id,
                 size: selectedSize,
                 quantity: quantity,
             };
-
-            // Retrieve the existing cart from localStorage
-            const cart: CartItem[] = JSON.parse(localStorage.getItem("cart") || "[]");
-
-            // Check if the item already exists in the cart
-            const existingItemIndex = cart.findIndex(
-                (item: CartItem) =>
-                    item.variantId === cartItem.variantId &&
-                    item.size === cartItem.size
-            );
-
-            if (existingItemIndex !== -1) {
-                // Update the quantity of the existing item
-                cart[existingItemIndex].quantity += cartItem.quantity;
-            } else {
-                // Add the new item to the cart
-                cart.push(cartItem);
-            }
-
-            // Store the updated cart back in localStorage
-            localStorage.setItem("cart", JSON.stringify(cart));
+            addToCart(cartItem);
             alert("Item added to cart");
         } else {
             alert("Please select a size");
