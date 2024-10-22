@@ -1,13 +1,14 @@
 "use client";
-import { useCart } from "./cartContext";
+import Link from "next/link";
+import { useCart } from "./cart-context";
 
 const CartButton = () => {
     const { cartItemCount } = useCart();
 
     return (
-        <div>
+        <Link href="/cart">
             Cart <span>({cartItemCount})</span>
-        </div>
+        </Link>
     );
 };
 

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import CartButton from "./cart-button";
+import CartButton from "./cart/cart-button";
 
 const TopNav = () => {
     return (

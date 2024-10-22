@@ -3,7 +3,7 @@ import { ProductCardsProps, Variant } from "@/app/lib/types";
 import { Size } from "@prisma/client";
 import clsx from "clsx";
 import { useState } from "react";
-import { useCart } from "./cartContext";
+import { useCart } from "./cart/cart-context";
 
 interface Props {
     product: ProductCardsProps;
@@ -54,11 +54,6 @@ interface ProductVariantProps {
     selectedVariant: Variant;
     setSelectedVariant: React.Dispatch<React.SetStateAction<Variant>>;
 }
-interface CartItem {
-    variantId: string;
-    size: Size;
-    quantity: number;
-}
 
 const allSizes = Object.values(Size);
 
@@ -76,12 +71,16 @@ const ProductVariant = ({
         setSelectedSize(null);
     };
 
+
     const handleAddToCart = () => {
         if (selectedSize) {
             const cartItem = {
                 variantId: selectedVariant.id,
                 size: selectedSize,
                 quantity: quantity,
+                imageUrl: selectedVariant.images[0].url,
+                name: product.name,
+                price: selectedVariant.currentPrice,
             };
             addToCart(cartItem);
             alert("Item added to cart");
